@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>¿Quieres ser mi novia?</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: pink;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-top: 60px;
+      color: red;
+      text-shadow: 2px 2px white;
+    }
+
+    .buttons {
+      margin-top: 30px;
+    }
+
+    .btn {
+      font-size: 1.5rem;
+      padding: 15px 30px;
+      margin: 20px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .btn-si {
+      background: red;
+      color: white;
+    }
+
+    .btn-no {
+      background: white;
+      color: red;
+      position: relative;
+    }
+
+    .te-amo {
+      font-size: 4rem;
+      color: red;
+      display: none;
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+
+    .corazon {
+      position: absolute;
+      font-size: 2rem;
+      color: red;
+      animation: caer 5s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes caer {
+      0% { top: -50px; opacity: 1; }
+      100% { top: 100vh; opacity: 0; }
+    }
+
+    #player {
+      /* Cambiado para mostrar siempre */
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌸💖 ¿Quieres ser mi novia? 💖🌸</h1>
+
+  <div class="buttons">
+    <button class="btn btn-si" onclick="responderSi()">Sí quiero 💘</button>
+    <button class="btn btn-no">No 😢</button>
+  </div>
+
+  <div class="te-amo" id="teAmo">¡TE AMO! 💕💖🎉</div>
+
+  <!-- Actualizado el reproductor de YouTube con más parámetros -->
+  <div id="player">
+    <iframe width="0" height="0" src="https://www.youtube.com/embed/6q8jm0Lu7GU?autoplay=1&loop=1&playlist=6q8jm0Lu7GU&mute=0" 
+            allow="autoplay" frameborder="0" allowfullscreen></iframe>
+  </div>
+
+  <script>
+    // Función para intentar iniciar la reproducción automática
+    function iniciarMusica() {
+      const iframe = document.querySelector('#player iframe');
+      // Reiniciar el iframe para forzar la reproducción
+      iframe.src = iframe.src;
+    }
+
+    // Intentar reproducir automáticamente
+    window.addEventListener('load', iniciarMusica);
+
+    // Reproducir con un clic en cualquier parte (garantiza reproducción)
+    document.addEventListener('click', function iniciarConClic() {
+      iniciarMusica();
+      document.removeEventListener('click', iniciarConClic); // Quitar después del primer clic
+      soltarCorazonClick();
+    }, { once: true });
+
+    function responderSi() {
+      document.getElementById('teAmo').style.display = 'block';
+      for (let i = 0; i < 20; i++) {
+        lanzarConfeti();
+      }
+    }
+
+    function lanzarConfeti() {
+      const corazon = document.createElement('div');
+      corazon.className = 'corazon';
+      corazon.textContent = '💖';
+      corazon.style.left = `${Math.random() * 100}vw`;
+      corazon.style.fontSize = `${Math.random() * 30 + 20}px`;
+      document.body.appendChild(corazon);
+      setTimeout(() => corazon.remove(), 5000);
+    }
+
+    function soltarCorazonClick() {
+      const corazon = document.createElement('div');
+      corazon.className = 'corazon';
+      corazon.textContent = '❤️';
+      corazon.style.left = `${Math.random() * 100}vw`;
+      corazon.style.top = `${Math.random() * 100}vh`;
+      document.body.appendChild(corazon);
+      corazon.style.animation = 'caer 2s linear';
+      setTimeout(() => corazon.remove(), 2000);
+    }
+
+    setInterval(lanzarConfeti, 1000); // corazones que caen siempre
+
+    // Configurar el botón "No" para que se mueva
+    const botonNo = document.querySelector('.btn-no');
+    botonNo.addEventListener('mouseenter', moverBotonNo);
+    botonNo.addEventListener('click', (e) => {
+      e.preventDefault();
+      moverBotonNo();
+    });
+
+    function moverBotonNo() {
+      const maxX = window.innerWidth - botonNo.offsetWidth;
+      const maxY = window.innerHeight - botonNo.offsetHeight;
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+      
+      botonNo.style.position = 'absolute';
+      botonNo.style.left = `${randomX}px`;
+      botonNo.style.top = `${randomY}px`;
+    }
+  </script>
+</body>
+</html>
