@@ -186,14 +186,25 @@
     });
 
     function moverBotonNo() {
-      const maxX = window.innerWidth - botonNo.offsetWidth;
-      const maxY = window.innerHeight - botonNo.offsetHeight;
-      const randomX = Math.floor(Math.random() * maxX);
-      const randomY = Math.floor(Math.random() * maxY);
+      // Calcular los límites para mantener el botón visible
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
       
-      botonNo.style.position = 'absolute';
+      // Limitar el movimiento al área central visible (entre 10% y 90% del viewport)
+      const minX = viewportWidth * 0.1;
+      const maxX = viewportWidth * 0.9 - botonNo.offsetWidth;
+      const minY = viewportHeight * 0.1;
+      const maxY = viewportHeight * 0.9 - botonNo.offsetHeight;
+      
+      // Generar posiciones aleatorias dentro del área visible
+      const randomX = Math.floor(minX + Math.random() * (maxX - minX));
+      const randomY = Math.floor(minY + Math.random() * (maxY - minY));
+      
+      // Establecer posición absoluta respecto a la ventana
+      botonNo.style.position = 'fixed'; // Cambiado de 'absolute' a 'fixed'
       botonNo.style.left = `${randomX}px`;
       botonNo.style.top = `${randomY}px`;
+      botonNo.style.zIndex = "100"; // Asegurar que esté por encima de otros elementos
     }
   </script>
 </body>
