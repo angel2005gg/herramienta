@@ -109,6 +109,23 @@
       left: 0;
       z-index: -1;
     }
+
+    .perrito {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 150px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      z-index: 5;
+      animation: flotar 3s ease-in-out infinite;
+    }
+
+    @keyframes flotar {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
   </style>
 </head>
 <body>
@@ -128,6 +145,10 @@
     <iframe width="0" height="0" src="https://www.youtube.com/embed/6q8jm0Lu7GU?autoplay=1&loop=1&playlist=6q8jm0Lu7GU&mute=0" 
             allow="autoplay" frameborder="0" allowfullscreen></iframe>
   </div>
+
+  <!-- Agregar la imagen del perrito -->
+  <img src="https://www.shutterstock.com/image-photo/valentine-dachshund-puppy-dog-holding-600nw-2409553197.jpg" 
+       alt="Perrito con corazón" class="perrito">
 
   <script>
     // Función para intentar iniciar la reproducción automática
