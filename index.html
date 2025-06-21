@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¡Feliz Cumpleaños Hermanita!</title>
     <style>
+        * {
+            -webkit-tap-highlight-color: transparent; /* Eliminar el highlight azul en dispositivos táctiles */
+            touch-action: manipulation; /* Mejor rendimiento táctil */
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             background-color: #FFD1DC;
@@ -17,6 +22,7 @@
             min-height: 100vh;
             overflow-x: hidden;
             cursor: pointer;
+            user-select: none; /* Evitar selección de texto */
         }
 
         .main-container {
@@ -82,6 +88,31 @@
         
         .cake-rain {
             font-size: 30px;
+        }
+
+        /* Nuevo: Elementos en el punto de clic */
+        .click-element {
+            position: fixed;
+            font-size: 40px;
+            pointer-events: none;
+            z-index: 200;
+            transform: translate(-50%, -50%);
+            animation: clickAnimation 1.5s ease-out forwards;
+        }
+
+        @keyframes clickAnimation {
+            0% {
+                transform: translate(-50%, -50%) scale(0.2);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) translateY(-100px);
+                opacity: 0;
+            }
         }
 
         @keyframes bounce {
@@ -229,7 +260,7 @@
             margin-right: auto;
         }
 
-        /* Nuevo: Efectos de celebración desde los lados */
+        /* Efectos de celebración desde los lados */
         .celebration-container {
             position: fixed;
             width: 100%;
@@ -387,6 +418,18 @@
             }
         }
 
+        /* Estilos para ocultar cualquier overlay de YouTube */
+        #youtube-audio {
+            position: absolute;
+            visibility: hidden;
+            width: 0;
+            height: 0;
+        }
+
+        iframe {
+            pointer-events: none; /* Evitar interacción directa con el iframe */
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 3em;
@@ -447,8 +490,11 @@
     </style>
 </head>
 <body id="birthday-card">
-    <!-- Audio element para la música de fondo -->
+    <!-- Audio element para la música de fondo (completamente oculto) -->
     <div id="youtube-audio" style="display: none;"></div>
+
+    <!-- Contenedor para los elementos que aparecen al hacer clic -->
+    <div id="click-elements-container"></div>
 
     <!-- Contenedor de efectos de celebración desde los lados -->
     <div class="celebration-container" id="celebrationContainer"></div>
@@ -505,8 +551,9 @@
         // Variables para controlar el estado de las animaciones
         let animationActive = false;
         let musicStarted = false;
+        let firstClick = true;
 
-        // Control de audio con YouTube
+        // Control de audio con YouTube (modo invisible)
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -519,7 +566,11 @@
                 playerVars: {
                     'autoplay': 0,
                     'controls': 0,
-                    'start': 46  // Comenzar desde el segundo 46 (0:46)
+                    'disablekb': 1,
+                    'fs': 0,
+                    'modestbranding': 1,
+                    'start': 46,  // Comenzar desde el segundo 46 (0:46)
+                    'playsinline': 1
                 },
                 events: {
                     'onReady': onPlayerReady
@@ -528,23 +579,69 @@
         }
         
         function onPlayerReady(event) {
-            // El reproductor está listo
-            document.getElementById('birthday-card').addEventListener('click', function() {
-                if (!musicStarted) {
-                    if (player && typeof player.getPlayerState === 'function') {
-                        player.playVideo();
-                        musicStarted = true;
-                    }
+            // Gestión de eventos de clic/toque
+            document.addEventListener('click', handleInteraction);
+            document.addEventListener('touchstart', handleInteraction);
+        }
+        
+        function handleInteraction(event) {
+            // Evitar clicks en el iframe de YouTube
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Si es el primer click/toque, iniciar música y animación inicial
+            if (firstClick) {
+                if (player && typeof player.getPlayerState === 'function') {
+                    player.playVideo();
+                    musicStarted = true;
                 }
                 
-                // Iniciar la secuencia de animaciones si no está activa
+                // Iniciar la secuencia de animaciones principal solo la primera vez
                 if (!animationActive) {
                     startClickAnimations();
                 }
-            });
+                firstClick = false;
+            } else {
+                // Para todos los demás clicks/toques, crear elemento en el punto de clic
+                createClickElement(event);
+            }
+        }
+        
+        // Crear elemento (pastel, corazón o globo) en el punto exacto donde se hizo clic
+        function createClickElement(event) {
+            // Obtener coordenadas del clic o toque
+            let x, y;
+            
+            if (event.type === 'touchstart') {
+                const touch = event.touches[0];
+                x = touch.clientX;
+                y = touch.clientY;
+            } else {
+                x = event.clientX;
+                y = event.clientY;
+            }
+            
+            const elementsContainer = document.getElementById('click-elements-container');
+            const element = document.createElement('div');
+            element.classList.add('click-element');
+            
+            // Elegir aleatoriamente entre pastel, corazón o globo
+            const elements = ['🎂', '❤️', '🎈', '🎉', '🎊', '🧁', '🍰'];
+            element.innerHTML = elements[Math.floor(Math.random() * elements.length)];
+            
+            // Posicionar en el punto exacto del clic
+            element.style.left = x + 'px';
+            element.style.top = y + 'px';
+            
+            elementsContainer.appendChild(element);
+            
+            // Eliminar después de que termine la animación
+            setTimeout(() => {
+                element.remove();
+            }, 1500);
         }
 
-        // Función para iniciar la secuencia de animaciones
+        // Función para iniciar la secuencia de animaciones (solo al inicio)
         function startClickAnimations() {
             animationActive = true;
             
@@ -689,7 +786,7 @@
             setTimeout(createBalloon, i * 300);
         }
 
-        // NUEVO: Efectos de celebración desde los lados
+        // Efectos de celebración desde los lados
         document.addEventListener('DOMContentLoaded', function() {
             startSideCelebration();
         });
@@ -800,8 +897,5 @@
             }
         }
     </script>
-    
-    <!-- Para asegurar que el API de YouTube funcione correctamente -->
-    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
