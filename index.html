@@ -487,6 +487,43 @@
                 font-size: 40px;
             }
         }
+
+        /* Nuevos estilos para los globos iniciales */
+        .initial-balloons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 90;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .initial-balloon {
+            position: absolute;
+            font-size: 40px;
+            color: #ff0000; /* Globos rojos */
+            animation: initialBalloonFall 3s linear;
+            text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes initialBalloonFall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh);
+            }
+        }
     </style>
 </head>
 <body id="birthday-card">
@@ -498,6 +535,9 @@
 
     <!-- Contenedor de efectos de celebración desde los lados -->
     <div class="celebration-container" id="celebrationContainer"></div>
+
+    <!-- Agregar este contenedor justo después del body -->
+    <div id="initial-balloons-container" class="initial-balloons"></div>
 
     <div class="main-container">
         <div class="container">
@@ -968,6 +1008,83 @@
                     streamer.remove();
                 }, 3000);
             }
+        }
+
+        // Crear globos iniciales en el contenedor especial
+        function createInitialBalloon() {
+            const container = document.getElementById('initial-balloons-container');
+            const balloon = document.createElement('div');
+            balloon.classList.add('initial-balloon');
+            balloon.style.left = Math.random() * 100 + '%';
+            balloon.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            balloon.style.fontSize = (Math.random() * 20 + 30) + 'px';
+            balloon.innerHTML = '🎈';
+            container.appendChild(balloon);
+            
+            // Eliminar globo después de completar la animación
+            setTimeout(() => {
+                balloon.remove();
+            }, 20000);
+        }
+        
+        // Crear globos iniciales a intervalos
+        setInterval(createInitialBalloon, 1000);
+        
+        // Globos iniciales
+        for(let i = 0; i < 15; i++) {
+            setTimeout(createInitialBalloon, i * 300);
+        }
+
+        // Agregar esta función al inicio del script, justo después de la declaración de variables
+        document.addEventListener('DOMContentLoaded', function() {
+            // Iniciar celebraciones laterales
+            startSideCelebration();
+            
+            // Iniciar lluvia de globos rojos
+            createInitialBalloons();
+        });
+
+        // Función para crear la lluvia inicial de globos rojos
+        function createInitialBalloons() {
+            const container = document.getElementById('initial-balloons-container');
+            
+            // Crear muchos globos rojos
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const balloon = document.createElement('div');
+                    balloon.classList.add('initial-balloon');
+                    balloon.innerHTML = '🎈';
+                    
+                    // Posicionar aleatoriamente a lo ancho de la pantalla
+                    balloon.style.left = Math.random() * 100 + '%';
+                    
+                    // Variar tamaño ligeramente
+                    const size = 30 + Math.random() * 30;
+                    balloon.style.fontSize = size + 'px';
+                    
+                    // Variar la velocidad de caída
+                    balloon.style.animationDuration = (2 + Math.random() * 2) + 's';
+                    
+                    // Pequeña rotación aleatoria
+                    balloon.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
+                    
+                    container.appendChild(balloon);
+                }, i * 20); // Escalonar la aparición para que no aparezcan todos a la vez
+            }
+            
+            // Eliminar todos los globos después de 2 segundos
+            setTimeout(() => {
+                const balloons = container.querySelectorAll('.initial-balloon');
+                balloons.forEach(balloon => {
+                    balloon.style.opacity = '0';
+                    balloon.style.transition = 'opacity 0.5s';
+                });
+                
+                // Limpiar el contenedor después de la transición
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 500);
+            }, 2000);
         }
     </script>
 </body>
