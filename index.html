@@ -552,6 +552,8 @@
         let animationActive = false;
         let musicStarted = false;
         let firstClick = true;
+        let audioInitialized = false;
+        let audioAttempts = 0;
 
         // Control de audio con YouTube (modo invisible)
         var tag = document.createElement('script');
@@ -570,48 +572,111 @@
                     'fs': 0,
                     'modestbranding': 1,
                     'start': 46,  // Comenzar desde el segundo 46 (0:46)
-                    'playsinline': 1
+                    'playsinline': 1,
+                    'rel': 0,
+                    'iv_load_policy': 3
                 },
                 events: {
-                    'onReady': onPlayerReady
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
                 }
             });
         }
         
         function onPlayerReady(event) {
-            // Configurar el player para que sea más robusto
-            player.setSize(1, 1);
+            audioInitialized = true;
             
             // Gestión de eventos de clic/toque
-            document.addEventListener('click', handleInteraction);
-            document.addEventListener('touchstart', handleInteraction);
-            
-            // Prevenir que se manipule el player directamente
-            const youtubeAudio = document.getElementById('youtube-audio');
-            youtubeAudio.style.pointerEvents = 'none';
+            document.addEventListener('click', handleInteraction, {passive: false});
+            document.addEventListener('touchstart', handleInteraction, {passive: false});
         }
         
+        function onPlayerStateChange(event) {
+            // Monitorear el estado del reproductor
+            if (event.data === YT.PlayerState.PLAYING) {
+                musicStarted = true;
+                console.log("YouTube está reproduciendo");
+            }
+        }
+
+        function onPlayerError(event) {
+            console.log("Error de YouTube:", event.data);
+            // Si hay error con YouTube, intentar con el audio de respaldo
+            if (!musicStarted) {
+                tryPlayAudio();
+            }
+        }
+
+        // Crear un audio estándar de HTML5 como respaldo
+        function setupBackupAudio() {
+            const audioElement = document.createElement('audio');
+            audioElement.id = 'backup-audio';
+            audioElement.loop = true;
+            audioElement.style.display = 'none';
+            audioElement.innerHTML = `
+                <source src="https://tunebat.com/download?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D-e1MUKFZNNE" type="audio/mp3">
+            `;
+            document.body.appendChild(audioElement);
+            return audioElement;
+        }
+
+        // Función para intentar reproducir audio con doble estrategia
+        function tryPlayAudio() {
+            if (musicStarted) return; // Ya se inició la música
+            
+            audioAttempts++;
+            
+            // Intentar con YouTube primero
+            if (player && typeof player.getPlayerState === 'function') {
+                try {
+                    player.setVolume(100);
+                    player.playVideo();
+                    console.log("Reproduciendo via YouTube API");
+                    musicStarted = true;
+                    return;
+                } catch (e) {
+                    console.log("Error con YouTube API:", e);
+                }
+            }
+            
+            // Si YouTube falla o no está listo, usar audio HTML5 de respaldo
+            if (!musicStarted && audioAttempts > 1) {
+                try {
+                    const backupAudio = document.getElementById('backup-audio') || setupBackupAudio();
+                    const playPromise = backupAudio.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            console.log("Reproduciendo via HTML5 Audio");
+                            musicStarted = true;
+                        }).catch(e => {
+                            console.log("Error con HTML5 Audio:", e);
+                        });
+                    }
+                } catch (e) {
+                    console.log("Error con audio de respaldo:", e);
+                }
+            }
+        }
+
         // Modificar la función handleInteraction
         function handleInteraction(event) {
-            // Evitar clicks en el iframe de YouTube
-            event.preventDefault();
-            event.stopPropagation();
+            // Prevenir comportamientos predeterminados
+            if (event.type === 'touchstart' || event.type === 'click') {
+                event.preventDefault();
+            }
             
-            // Solo iniciar la música una vez, nunca intentarlo de nuevo
+            // Intentar reproducir audio solo si aún no se ha iniciado
             if (!musicStarted) {
-                if (player && typeof player.getPlayerState === 'function') {
-                    player.playVideo();
-                    musicStarted = true;
-                    
-                    // Iniciar la secuencia de animaciones principal solo la primera vez
-                    if (!animationActive) {
-                        startClickAnimations();
-                    }
+                tryPlayAudio();
+                
+                // Iniciar la secuencia de animaciones principal
+                if (!animationActive) {
+                    startClickAnimations();
                 }
-            } 
-            
-            // Para todos los clicks/toques después del primero, solo crear elementos
-            if (musicStarted) {
+            } else {
+                // Ya tenemos música, solo crear elementos en el punto del clic
                 createClickElement(event);
             }
         }
