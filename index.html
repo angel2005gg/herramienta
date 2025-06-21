@@ -579,35 +579,43 @@
         }
         
         function onPlayerReady(event) {
+            // Configurar el player para que sea más robusto
+            player.setSize(1, 1);
+            
             // Gestión de eventos de clic/toque
             document.addEventListener('click', handleInteraction);
             document.addEventListener('touchstart', handleInteraction);
+            
+            // Prevenir que se manipule el player directamente
+            const youtubeAudio = document.getElementById('youtube-audio');
+            youtubeAudio.style.pointerEvents = 'none';
         }
         
+        // Modificar la función handleInteraction
         function handleInteraction(event) {
             // Evitar clicks en el iframe de YouTube
             event.preventDefault();
             event.stopPropagation();
             
-            // Si es el primer click/toque, iniciar música y animación inicial
-            if (firstClick) {
+            // Solo iniciar la música una vez, nunca intentarlo de nuevo
+            if (!musicStarted) {
                 if (player && typeof player.getPlayerState === 'function') {
                     player.playVideo();
                     musicStarted = true;
+                    
+                    // Iniciar la secuencia de animaciones principal solo la primera vez
+                    if (!animationActive) {
+                        startClickAnimations();
+                    }
                 }
-                
-                // Iniciar la secuencia de animaciones principal solo la primera vez
-                if (!animationActive) {
-                    startClickAnimations();
-                }
-                firstClick = false;
-            } else {
-                // Para todos los demás clicks/toques, crear elemento en el punto de clic
+            } 
+            
+            // Para todos los clicks/toques después del primero, solo crear elementos
+            if (musicStarted) {
                 createClickElement(event);
             }
         }
         
-        // Crear elemento (pastel, corazón o globo) en el punto exacto donde se hizo clic
         function createClickElement(event) {
             // Obtener coordenadas del clic o toque
             let x, y;
