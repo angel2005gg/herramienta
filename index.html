@@ -27,6 +27,7 @@
             padding: 30px;
             margin: 20px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            z-index: 10;
         }
 
         .container {
@@ -228,6 +229,164 @@
             margin-right: auto;
         }
 
+        /* Nuevo: Efectos de celebración desde los lados */
+        .celebration-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 50;
+            overflow: hidden;
+        }
+
+        .party-popper {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            font-size: 40px;
+            z-index: 50;
+        }
+
+        .party-popper-left {
+            left: -60px;
+            animation: popperLeft 2s ease-out forwards;
+        }
+
+        .party-popper-right {
+            right: -60px;
+            animation: popperRight 2s ease-out forwards;
+        }
+
+        @keyframes popperLeft {
+            0% { 
+                left: -60px;
+                transform: rotate(-45deg);
+            }
+            30% { 
+                left: 20%; 
+                transform: rotate(-20deg);
+            }
+            100% { 
+                left: 20%; 
+                transform: rotate(-20deg);
+            }
+        }
+
+        @keyframes popperRight {
+            0% { 
+                right: -60px; 
+                transform: rotate(45deg);
+            }
+            30% { 
+                right: 20%; 
+                transform: rotate(20deg);
+            }
+            100% { 
+                right: 20%; 
+                transform: rotate(20deg);
+            }
+        }
+
+        .confetti-item {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .confetti-left {
+            left: 20%;
+            top: 50%;
+            animation: confettiLeft 1.5s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .confetti-right {
+            right: 20%;
+            top: 50%;
+            animation: confettiRight 1.5s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes confettiLeft {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(calc(30vw - var(--tx)), calc(-40vh + var(--ty))) rotate(var(--rot));
+                opacity: 0;
+            }
+        }
+
+        @keyframes confettiRight {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(calc(-30vw + var(--tx)), calc(-40vh + var(--ty))) rotate(var(--rot));
+                opacity: 0;
+            }
+        }
+
+        .streamer {
+            position: absolute;
+            width: 5px;
+            height: 100px;
+            background: linear-gradient(to bottom, var(--color1), var(--color2));
+            opacity: 0;
+            border-radius: 5px;
+            transform-origin: top center;
+        }
+
+        .streamer-left {
+            left: 20%;
+            top: 50%;
+            animation: streamerLeft 2s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .streamer-right {
+            right: 20%;
+            top: 50%;
+            animation: streamerRight 2s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes streamerLeft {
+            0% {
+                transform: rotate(-90deg) scaleY(0);
+                opacity: 1;
+            }
+            20% {
+                transform: rotate(calc(-45deg + var(--angle))) scaleY(1);
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(calc(-45deg + var(--angle))) scaleY(1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes streamerRight {
+            0% {
+                transform: rotate(90deg) scaleY(0);
+                opacity: 1;
+            }
+            20% {
+                transform: rotate(calc(45deg + var(--angle))) scaleY(1);
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(calc(45deg + var(--angle))) scaleY(1);
+                opacity: 0;
+            }
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 3em;
@@ -290,6 +449,9 @@
 <body id="birthday-card">
     <!-- Audio element para la música de fondo -->
     <div id="youtube-audio" style="display: none;"></div>
+
+    <!-- Contenedor de efectos de celebración desde los lados -->
+    <div class="celebration-container" id="celebrationContainer"></div>
 
     <div class="main-container">
         <div class="container">
@@ -525,6 +687,117 @@
         // Globos iniciales
         for(let i = 0; i < 15; i++) {
             setTimeout(createBalloon, i * 300);
+        }
+
+        // NUEVO: Efectos de celebración desde los lados
+        document.addEventListener('DOMContentLoaded', function() {
+            startSideCelebration();
+        });
+
+        function startSideCelebration() {
+            const celebrationContainer = document.getElementById('celebrationContainer');
+            
+            // Crear los lanzadores de fiesta (party poppers)
+            const leftPopper = document.createElement('div');
+            leftPopper.classList.add('party-popper', 'party-popper-left');
+            leftPopper.innerHTML = '🎉';
+            celebrationContainer.appendChild(leftPopper);
+            
+            const rightPopper = document.createElement('div');
+            rightPopper.classList.add('party-popper', 'party-popper-right');
+            rightPopper.innerHTML = '🎊';
+            celebrationContainer.appendChild(rightPopper);
+            
+            // Crear confeti y serpentinas después de un pequeño retraso
+            setTimeout(() => {
+                createConfetti('left');
+                createConfetti('right');
+                createStreamers('left');
+                createStreamers('right');
+                
+                // Eliminar los efectos después de un tiempo
+                setTimeout(() => {
+                    // Ocultar lanzadores
+                    leftPopper.style.opacity = '0';
+                    rightPopper.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        celebrationContainer.innerHTML = '';
+                    }, 1000);
+                }, 5000);
+            }, 800);
+        }
+        
+        function createConfetti(side) {
+            const celebrationContainer = document.getElementById('celebrationContainer');
+            const confettiEmojis = ['🎈', '🎂', '✨', '🎁', '🎉', '🎊', '💖', '🌟', '🍰'];
+            
+            // Crear 40 piezas de confeti por lado
+            for (let i = 0; i < 40; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti-item', `confetti-${side}`);
+                
+                // Usar emojis aleatorios o cuadrados de colores
+                if (Math.random() > 0.5) {
+                    confetti.innerHTML = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
+                    confetti.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                } else {
+                    const colors = ['#FF66B2', '#FFD1DC', '#FF1493', '#9400D3', '#FFC0CB', '#FF69B4'];
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                }
+                
+                // Configurar variables para controlar la animación
+                const tx = (Math.random() - 0.5) * 300;
+                const ty = (Math.random() - 0.5) * 300;
+                const rot = (Math.random() * 360) + 'deg';
+                
+                confetti.style.setProperty('--tx', tx + 'px');
+                confetti.style.setProperty('--ty', ty + 'px');
+                confetti.style.setProperty('--rot', rot);
+                
+                celebrationContainer.appendChild(confetti);
+                
+                // Eliminar después de la animación
+                setTimeout(() => {
+                    confetti.remove();
+                }, 2000);
+            }
+        }
+        
+        function createStreamers(side) {
+            const celebrationContainer = document.getElementById('celebrationContainer');
+            const colors = [
+                ['#FF66B2', '#FFD1DC'], 
+                ['#FF1493', '#FFC0CB'], 
+                ['#9400D3', '#FF69B4'],
+                ['#FF1493', '#9400D3'],
+                ['#FF66B2', '#FF1493']
+            ];
+            
+            // Crear 15 serpentinas por lado
+            for (let i = 0; i < 15; i++) {
+                const streamer = document.createElement('div');
+                streamer.classList.add('streamer', `streamer-${side}`);
+                
+                // Colores aleatorios
+                const colorPair = colors[Math.floor(Math.random() * colors.length)];
+                streamer.style.setProperty('--color1', colorPair[0]);
+                streamer.style.setProperty('--color2', colorPair[1]);
+                
+                // Ángulo aleatorio
+                const angle = (Math.random() * 90 - 45) + 'deg';
+                streamer.style.setProperty('--angle', angle);
+                
+                // Longitud aleatoria
+                streamer.style.height = (Math.random() * 60 + 80) + 'px';
+                
+                celebrationContainer.appendChild(streamer);
+                
+                // Eliminar después de la animación
+                setTimeout(() => {
+                    streamer.remove();
+                }, 3000);
+            }
         }
     </script>
     
