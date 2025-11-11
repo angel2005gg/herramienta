@@ -3,1089 +3,607 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Feliz Cumpleaños Hermanita!</title>
+    <title></title>
     <style>
         * {
-            -webkit-tap-highlight-color: transparent; /* Eliminar el highlight azul en dispositivos táctiles */
-            touch-action: manipulation; /* Mejor rendimiento táctil */
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #FFD1DC;
             margin: 0;
             padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgb(181, 180, 255);
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        *:focus{
+            outline: none;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            cursor: pointer;
-            user-select: none; /* Evitar selección de texto */
+            align-items: center;
         }
-
-        .main-container {
-            max-width: 900px;
-            width: 90%;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-        }
-
-        .container {
-            width: 100%;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 4em;
-            color: #FF66B2;
-            text-shadow: 2px 2px 4px #FFFFFF;
-            animation: bounce 2s infinite;
-            margin-top: 0;
-        }
-
-        .decoration {
+        .bouquet {
+            position: relative;
+            width: 300px;
+            height: 400px;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            margin: 20px 0;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 50px;
+            z-index: 10;
+            transition: transform 0.3s ease;
         }
 
-        .cake, .hat {
-            width: 80px;
-            height: 80px;
-            margin: 10px;
-            animation: rotate 4s infinite alternate;
+        .bouquet:active {
+            transform: scale(0.95);
+        }
+
+        .main-stem {
+            position: absolute;
+            width: 12px;
+            height: 250px;
+            background: linear-gradient(to right, #2e7d32, #388e3c, #43a047);
+            border-radius: 6px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            transform-origin: bottom;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .secondary-stem {
+            position: absolute;
+            width: 8px;
+            height: 180px;
+            background: linear-gradient(to right, #388e3c, #4caf50);
+            border-radius: 4px;
+            bottom: 30px;
+            z-index: 0;
+            transform-origin: bottom;
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+        }
+
+        .flower {
+            position: absolute;
+            z-index: 2;
+            animation: float 4s ease-in-out infinite;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .flower:nth-child(2n) {
+            animation-delay: 0.5s;
+        }
+
+        .flower:nth-child(3n) {
+            animation-delay: 1s;
+        }
+
+        .petals {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: rotate 20s linear infinite;
+        }
+
+        .petal {
+            position: absolute;
+            background: radial-gradient(ellipse at center, #fff176 0%, #ffd54f 70%, #ffb300 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transform-origin: center center;
+            box-shadow: inset 0 -3px 5px rgba(255,183,77,0.5);
+            border: 1px solid rgba(255,213,79,0.3);
+        }
+
+        .center {
+            position: absolute;
+            background: radial-gradient(circle, #5d4037 0%, #3e2723 100%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            box-shadow: 0 0 8px rgba(0,0,0,0.4), inset 0 2px 2px rgba(255,255,255,0.2);
+        }
+
+        .leaf {
+            position: absolute;
+            width: 50px;
+            height: 25px;
+            background: linear-gradient(45deg, #388e3c, #4caf50, #66bb6a);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transform: rotate(45deg);
+            z-index: 1;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .leaf::before {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #2e7d32, transparent);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
         }
 
         .message {
-            font-size: 1.5em;
-            color: #FF1493;
-            margin: 15px 0;
-            animation: fadeIn 1.5s;
-        }
-
-        .hearts, .cakes {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .heart, .cake-rain {
             position: absolute;
-            width: 30px;
-            height: 30px;
-            pointer-events: none;
-            animation: float 6s linear infinite;
-        }
-        
-        .cake-rain {
-            font-size: 30px;
+            bottom: 15%;
+            font-size: 28px;
+            color: #5d4037;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease-in-out;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            font-weight: bold;
+            font-style: italic;
+            z-index: 5;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
-        /* Nuevo: Elementos en el punto de clic */
-        .click-element {
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+
+        .click-indicator {
             position: fixed;
-            font-size: 40px;
-            pointer-events: none;
-            z-index: 200;
-            transform: translate(-50%, -50%);
-            animation: clickAnimation 1.5s ease-out forwards;
-        }
-
-        @keyframes clickAnimation {
-            0% {
-                transform: translate(-50%, -50%) scale(0.2);
-                opacity: 1;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.2);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1) translateY(-100px);
-                opacity: 0;
-            }
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            font-size: 16px;
+            color: #5d4037;
+            z-index: 100;
+            animation: bounce 2s infinite;
+            transition: opacity 0.5s ease;
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(15deg); }
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
             }
-            100% {
-                transform: translateY(-900px) rotate(360deg);
-                opacity: 0;
+            40% {
+                transform: translateX(-50%) translateY(-10px);
             }
-        }
-
-        .love-message {
-            font-size: 2.2em;
-            color: #9400D3;
-            font-weight: bold;
-            margin: 30px 0;
-            animation: pulse 2s infinite;
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .balloons {
-            position: fixed;
-            top: -100px;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .balloon {
-            position: absolute;
-            width: 40px;
-            height: 50px;
-            animation: floatUp 15s linear infinite;
-        }
-
-        @keyframes floatUp {
             0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 1;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.15);
             }
             100% {
-                transform: translateY(-200px) rotate(20deg);
-                opacity: 0;
+                box-shadow: 0 8px 30px rgba(255,20,147,0.3);
             }
         }
 
-        /* Animaciones al hacer clic */
-        .click-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            pointer-events: none;
-            z-index: 100;
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-8px) rotate(-1deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(0deg);
+            }
+            75% {
+                transform: translateY(-8px) rotate(1deg);
+            }
         }
 
-        .animation-cake {
-            font-size: 150px;
-            transform: scale(0);
-            opacity: 0;
-            transition: all 0.5s ease-out;
-        }
-
-        .animation-cake.active {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .animation-text {
-            font-size: 80px;
-            color: #FF1493;
-            font-weight: bold;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px 40px;
-            border-radius: 20px;
-            transform: scale(0);
-            opacity: 0;
-            transition: all 0.5s ease-out;
-        }
-
-        .animation-text.active {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .animation-hearts {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .animation-heart {
-            position: absolute;
-            font-size: 30px;
-            animation: explode 1.5s ease-out forwards;
-            opacity: 0;
-        }
-
-        @keyframes explode {
+        @keyframes rotate {
             0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 1;
+                transform: rotate(0deg);
             }
             100% {
-                transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(1);
-                opacity: 0;
+                transform: rotate(360deg);
             }
         }
 
-        .divider {
-            border: none;
-            height: 2px;
-            background-color: rgba(255, 105, 180, 0.5);
-            margin: 25px 0;
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Efectos de celebración desde los lados */
-        .celebration-container {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 50;
-            overflow: hidden;
-        }
-
-        .party-popper {
+        .ribbon {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            font-size: 40px;
-            z-index: 50;
-        }
-
-        .party-popper-left {
-            left: -60px;
-            animation: popperLeft 2s ease-out forwards;
-        }
-
-        .party-popper-right {
-            right: -60px;
-            animation: popperRight 2s ease-out forwards;
-        }
-
-        @keyframes popperLeft {
-            0% { 
-                left: -60px;
-                transform: rotate(-45deg);
-            }
-            30% { 
-                left: 20%; 
-                transform: rotate(-20deg);
-            }
-            100% { 
-                left: 20%; 
-                transform: rotate(-20deg);
-            }
-        }
-
-        @keyframes popperRight {
-            0% { 
-                right: -60px; 
-                transform: rotate(45deg);
-            }
-            30% { 
-                right: 20%; 
-                transform: rotate(20deg);
-            }
-            100% { 
-                right: 20%; 
-                transform: rotate(20deg);
-            }
-        }
-
-        .confetti-item {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .confetti-left {
-            left: 20%;
-            top: 50%;
-            animation: confettiLeft 1.5s ease-out forwards;
-            animation-delay: 0.5s;
-        }
-
-        .confetti-right {
-            right: 20%;
-            top: 50%;
-            animation: confettiRight 1.5s ease-out forwards;
-            animation-delay: 0.5s;
-        }
-
-        @keyframes confettiLeft {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(calc(30vw - var(--tx)), calc(-40vh + var(--ty))) rotate(var(--rot));
-                opacity: 0;
-            }
-        }
-
-        @keyframes confettiRight {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(calc(-30vw + var(--tx)), calc(-40vh + var(--ty))) rotate(var(--rot));
-                opacity: 0;
-            }
-        }
-
-        .streamer {
-            position: absolute;
-            width: 5px;
-            height: 100px;
-            background: linear-gradient(to bottom, var(--color1), var(--color2));
-            opacity: 0;
+            width: 140px;
+            height: 35px;
+            background: linear-gradient(45deg, #ff4081, #f50057, #c2185b);
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-15deg);
+            z-index: 2;
             border-radius: 5px;
-            transform-origin: top center;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
         }
 
-        .streamer-left {
-            left: 20%;
-            top: 50%;
-            animation: streamerLeft 2s ease-out forwards;
-            animation-delay: 0.5s;
-        }
-
-        .streamer-right {
-            right: 20%;
-            top: 50%;
-            animation: streamerRight 2s ease-out forwards;
-            animation-delay: 0.5s;
-        }
-
-        @keyframes streamerLeft {
-            0% {
-                transform: rotate(-90deg) scaleY(0);
-                opacity: 1;
-            }
-            20% {
-                transform: rotate(calc(-45deg + var(--angle))) scaleY(1);
-                opacity: 1;
-            }
-            100% {
-                transform: rotate(calc(-45deg + var(--angle))) scaleY(1);
-                opacity: 0;
-            }
-        }
-
-        @keyframes streamerRight {
-            0% {
-                transform: rotate(90deg) scaleY(0);
-                opacity: 1;
-            }
-            20% {
-                transform: rotate(calc(45deg + var(--angle))) scaleY(1);
-                opacity: 1;
-            }
-            100% {
-                transform: rotate(calc(45deg + var(--angle))) scaleY(1);
-                opacity: 0;
-            }
-        }
-
-        /* Estilos para ocultar cualquier overlay de YouTube */
-        #youtube-audio {
+        .ribbon::after {
+            content: '';
             position: absolute;
-            visibility: hidden;
-            width: 0;
-            height: 0;
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(45deg, #ff4081, #f50057);
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
         }
 
-        iframe {
-            pointer-events: none; /* Evitar interacción directa con el iframe */
+        .click-flower {
+            position: absolute;
+            pointer-events: none;
+            animation: float-up 3s ease-out forwards, fade-out 3s ease-out forwards;
+            z-index: 20;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        .click-flower:focus {
+           outline: none;
         }
 
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 3em;
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) scale(0.8) rotate(0deg);
+                opacity: 1;
             }
-            
-            .cake, .hat {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .message {
-                font-size: 1.2em;
-            }
-            
-            .love-message {
-                font-size: 1.8em;
-            }
-
-            .animation-cake {
-                font-size: 100px;
-            }
-
-            .animation-text {
-                font-size: 50px;
+            100% {
+                transform: translateY(-150px) scale(1.2) rotate(360deg);
+                opacity: 0;
             }
         }
 
-        @media (max-width: 480px) {
-            .main-container {
-                padding: 20px 15px;
+        @keyframes fade-out {
+            0% {
+                opacity: 1;
             }
-            
-            h1 {
-                font-size: 2em;
-            }
-            
-            .cake, .hat {
-                width: 50px;
-                height: 50px;
-            }
-            
-            .message {
-                font-size: 1em;
-            }
-            
-            .love-message {
-                font-size: 1.5em;
-            }
-
-            .animation-cake {
-                font-size: 80px;
-            }
-
-            .animation-text {
-                font-size: 40px;
+            100% {
+                opacity: 0;
             }
         }
 
-        /* Nuevos estilos para los globos iniciales */
-        .initial-balloons {
-            position: fixed;
+        .hearts {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 90;
             pointer-events: none;
-            overflow: hidden;
+            z-index: 1;
         }
 
-        .initial-balloon {
+        .heart {
             position: absolute;
-            font-size: 40px;
-            color: #ff0000; /* Globos rojos */
-            animation: initialBalloonFall 3s linear;
-            text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+            color: #ff69b4;
+            font-size: 20px;
+            animation: fall 4s linear infinite;
+            opacity: 0.7;
         }
 
-        @keyframes initialBalloonFall {
+        @keyframes fall {
             0% {
-                transform: translateY(-100px);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0.7;
             }
             100% {
+                transform: translateY(100vh) rotate(360deg);
                 opacity: 0;
-                transform: translateY(100vh);
             }
+        }
+        div:focus{
+            outline: none;
         }
     </style>
 </head>
-<body id="birthday-card">
-    <!-- Audio element para la música de fondo (completamente oculto) -->
-    <div id="youtube-audio" style="display: none;"></div>
+<body>
+  <audio loop style="display: none" id="background-music">
+    <source src="flor.mp4" type="audio/mpeg">
+    Tu navegador no soporta el elemento de audio.
+  </audio>
+    <div class="hearts" id="hearts"></div>
+    
+    <!-- Añadido: Indicador de click -->
+    <div class="click-indicator" id="clickIndicator">¡Haz click en cualquier parte!</div>
 
-    <!-- Contenedor para los elementos que aparecen al hacer clic -->
-    <div id="click-elements-container"></div>
-
-    <!-- Contenedor de efectos de celebración desde los lados -->
-    <div class="celebration-container" id="celebrationContainer"></div>
-
-    <!-- Agregar este contenedor justo después del body -->
-    <div id="initial-balloons-container" class="initial-balloons"></div>
-
-    <div class="main-container">
-        <div class="container">
-            <h1>¡Feliz Cumpleaños Hermanita!</h1>
+    <div class="container">
+        <div class="bouquet">
+            <div class="main-stem"></div>
             
-            <div class="decoration">
-                <img class="cake" src="https://cdn-icons-png.flaticon.com/512/1444/1444045.png" alt="Pastel">
-                <img class="hat" src="https://cdn-icons-png.flaticon.com/512/3152/3152966.png" alt="Gorro">
-                <img class="cake" src="https://cdn-icons-png.flaticon.com/512/5922/5922205.png" alt="Pastel">
-                <img class="hat" src="https://cdn-icons-png.flaticon.com/512/1684/1684044.png" alt="Gorro">
+            <!-- Tallos secundarios -->
+            <div class="secondary-stem" style="left: 48%; transform: rotate(-10deg);"></div>
+            <div class="secondary-stem" style="left: 52%; transform: rotate(10deg);"></div>
+            <div class="secondary-stem" style="left: 46%; transform: rotate(-20deg); height: 150px; bottom: 50px;"></div>
+            <div class="secondary-stem" style="left: 54%; transform: rotate(20deg); height: 150px; bottom: 50px;"></div>
+            
+            <div class="ribbon"></div>
+            
+            <!-- Hojas mejoradas -->
+            <div class="leaf" style="bottom: 100px; left: 45%;"></div>
+            <div class="leaf" style="bottom: 120px; left: 55%; transform: rotate(-45deg);"></div>
+            <div class="leaf" style="bottom: 80px; left: 52%; transform: rotate(20deg);"></div>
+            <div class="leaf" style="bottom: 140px; left: 48%; transform: rotate(-60deg); width: 40px; height: 20px;"></div>
+            
+            <!-- Flores principales -->
+            <div class="flower" style="left: 40%; bottom: 200px; width: 100px; height: 90px; transform: translateX(-50%);">
+                <div class="petals"></div>
+                <div class="center" style="width:   20px; height: 20px;"></div>
+            </div>
+
+            <div class="flower" style="left: 50%; bottom: 200px; width: 80px; height: 80px; transform: translateX(-50%);">
+                <div class="petals"></div>
+                <div class="center" style="width:   20px; height: 20px;"></div>
+            </div>
+
+
+            <div class="flower" style="left: 50%; bottom: 200px; width: 80px; height: 80px; transform: translateX(-50%);">
+                <div class="petals"></div>
+                <div class="center" style="width:   20px; height: 20px;"></div>
+            </div>
+
+
+            <div class="flower" style="left: 30%; bottom: 180px; width: 80px; height: 80px; transform: translateX(-50%);">
+                <div class="petals"></div>
+                <div class="center" style="width:   20px; height: 20px;"></div>
+            </div>
+            <div class="flower" style="left: 20%; bottom: 160px; width: 80px; height: 80px; transform: translateX(-50%);">
+                <div class="petals"></div>
+                <div class="center" style="width:   20px; height: 20px;"></div>
             </div>
             
-            <div class="message">En este día tan especial quiero desearte...</div>
-            <div class="message">¡Un día lleno de alegría y felicidad!</div>
+            <div class="flower" style="left: 42%; bottom: 160px; width: 60px; height: 60px; transform: translateX(-50%);">
+                <div class="petals"></div>
+                <div class="center" style="width:   20px; height: 20px;"></div>
+            </div>
             
-            <hr class="divider">
-            
-            <div class="love-message">¡Te quiero muchísimo!</div>
-            
-            <hr class="divider">
-            
-            <div class="message">Gracias por ser la mejor hermana del mundo</div>
-            <div class="message">¡Que todos tus deseos se hagan realidad!</div>
-            <div class="message">Te quiero hoy, mañana y siempre ❤️</div>
-            
-            <div class="decoration">
-                <img class="cake" src="https://cdn-icons-png.flaticon.com/512/4575/4575533.png" alt="Pastel">
-                <img class="hat" src="https://cdn-icons-png.flaticon.com/512/6646/6646334.png" alt="Gorro">
-                <img class="cake" src="https://cdn-icons-png.flaticon.com/512/2682/2682446.png" alt="Pastel">
-                <img class="hat" src="https://cdn-icons-png.flaticon.com/512/6866/6866535.png" alt="Gorro">
+            <div class="flower" style="left: 58%; bottom: 160px; width: 60px; height: 60px; transform: translateX(-50%);">
+                <div class="petals"></div>
+                <div class="center" style="width:   20px; height: 20px;"></div>
+            </div>
+
+            <div class="flower" style="left: 35%; bottom: 130px; width: 70px; height: 70px; transform: translateX(-50%);">
+                <div class="petals"></div>
+                <div class="center" style="width: 25px; height: 25px;"></div>
+            </div>
+
+            <div class="flower" style="left: 65%; bottom: 130px; width: 70px; height: 70px; transform: translateX(-50%);">
+                <div class="petals"></div>
+                <div class="center" style="width: 25px; height: 25px;"></div>
             </div>
         </div>
+        
+        <div class="message">Picos pa vos linda ❤️</div>
     </div>
-    
-    <div class="hearts" id="hearts"></div>
-    <div class="cakes" id="cakes"></div>
-    <div class="balloons" id="balloons"></div>
-
-    <!-- Contenedores para las animaciones al hacer clic -->
-    <div class="click-animation" id="clickAnimation">
-        <div class="animation-cake" id="animationCake">🎂</div>
-    </div>
-
-    <div class="click-animation" id="clickText">
-        <div class="animation-text" id="animationText">¡Te Quiero!</div>
-    </div>
-
-    <div class="animation-hearts" id="animationHearts"></div>
 
     <script>
-        // Variables para controlar el estado de las animaciones
-        let animationActive = false;
-        let musicStarted = false;
-        let firstClick = true;
-        let audioInitialized = false;
-        let audioAttempts = 0;
-
-        // Control de audio con YouTube (modo invisible)
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-audio', {
-                videoId: '-e1MUKFZNNE',
-                playerVars: {
-                    'autoplay': 0,
-                    'controls': 0,
-                    'disablekb': 1,
-                    'fs': 0,
-                    'modestbranding': 1,
-                    'start': 46,  // Comenzar desde el segundo 46 (0:46)
-                    'playsinline': 1,
-                    'rel': 0,
-                    'iv_load_policy': 3
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange,
-                    'onError': onPlayerError
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener el indicador de click
+            const clickIndicator = document.getElementById('clickIndicator');
+            
+            // Crear pétalos para cada flor con centros perfectamente centrados
+            const flowers = document.querySelectorAll('.flower');
+            flowers.forEach(flower => {
+                const petalsContainer = flower.querySelector('.petals');
+                const center = flower.querySelector('.center');
+                const flowerSize = parseFloat(flower.style.width);
+                const petalSize = flowerSize * 0.35;
+                const petalLength = flowerSize * 0.6;
+                
+                // Asegurar que el centro esté perfectamente centrado
+                center.style.position = 'absolute';
+                center.style.top = '50%';
+                center.style.left = '50%';
+                center.style.transform = 'translate(-50%, -50%)';
+                center.style.zIndex = '10';
+                
+                for (let i = 0; i < 14; i++) {
+                    const petal = document.createElement('div');
+                    petal.className = 'petal';
+                    petal.style.width = `${petalSize}px`;
+                    petal.style.height = `${petalLength}px`;
+                    petal.style.position = 'absolute';
+                    petal.style.left = '50%';
+                    petal.style.top = '50%';
+                    petal.style.transform = `translate(-50%, -50%) rotate(${i * (360/14)}deg) translateY(-${petalLength/3.5}px)`;
+                    petal.style.transformOrigin = 'center center';
+                    
+                    // Variación en el color de los pétalos
+                    const hueVariation = Math.random() * 15 - 7;
+                    const colors = [
+                        `hsl(${340 + hueVariation}, 90%, ${85 + Math.random() * 10}%)`, // rosa claro
+                        `hsl(${330 + hueVariation}, 90%, ${70 + Math.random() * 10}%)`, // rosa medio
+                        `hsl(${320 + hueVariation}, 80%, ${60 + Math.random() * 10}%)`  // rosa fuerte
+                    ];
+                    
+                    petal.style.background = `radial-gradient(ellipse at center, ${colors[0]} 0%, ${colors[1]} 70%, ${colors[2]} 100%)`;
+                    
+                    petalsContainer.appendChild(petal);
                 }
             });
-        }
-        
-        function onPlayerReady(event) {
-            audioInitialized = true;
-            
-            // Gestión de eventos de clic/toque
-            document.addEventListener('click', handleInteraction, {passive: false});
-            document.addEventListener('touchstart', handleInteraction, {passive: false});
-        }
-        
-        function onPlayerStateChange(event) {
-            // Monitorear el estado del reproductor
-            if (event.data === YT.PlayerState.PLAYING) {
-                musicStarted = true;
-                console.log("YouTube está reproduciendo");
-            }
-        }
 
-        function onPlayerError(event) {
-            console.log("Error de YouTube:", event.data);
-            // Si hay error con YouTube, intentar con el audio de respaldo
-            if (!musicStarted) {
-                tryPlayAudio();
-            }
-        }
-
-        // Crear un audio estándar de HTML5 como respaldo
-        function setupBackupAudio() {
-            const audioElement = document.createElement('audio');
-            audioElement.id = 'backup-audio';
-            audioElement.loop = true;
-            audioElement.style.display = 'none';
-            audioElement.innerHTML = `
-                <source src="https://tunebat.com/download?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D-e1MUKFZNNE" type="audio/mp3">
-            `;
-            document.body.appendChild(audioElement);
-            return audioElement;
-        }
-
-        // Función para intentar reproducir audio con doble estrategia
-        function tryPlayAudio() {
-            if (musicStarted) return; // Ya se inició la música
-            
-            audioAttempts++;
-            
-            // Intentar con YouTube primero
-            if (player && typeof player.getPlayerState === 'function') {
-                try {
-                    player.setVolume(100);
-                    player.playVideo();
-                    console.log("Reproduciendo via YouTube API");
-                    musicStarted = true;
-                    return;
-                } catch (e) {
-                    console.log("Error con YouTube API:", e);
-                }
-            }
-            
-            // Si YouTube falla o no está listo, usar audio HTML5 de respaldo
-            if (!musicStarted && audioAttempts > 1) {
-                try {
-                    const backupAudio = document.getElementById('backup-audio') || setupBackupAudio();
-                    const playPromise = backupAudio.play();
-                    
-                    if (playPromise !== undefined) {
-                        playPromise.then(() => {
-                            console.log("Reproduciendo via HTML5 Audio");
-                            musicStarted = true;
-                        }).catch(e => {
-                            console.log("Error con HTML5 Audio:", e);
-                        });
-                    }
-                } catch (e) {
-                    console.log("Error con audio de respaldo:", e);
-                }
-            }
-        }
-
-        // Modificar la función handleInteraction
-        function handleInteraction(event) {
-            // Prevenir comportamientos predeterminados
-            if (event.type === 'touchstart' || event.type === 'click') {
-                event.preventDefault();
-            }
-            
-            // Intentar reproducir audio solo si aún no se ha iniciado
-            if (!musicStarted) {
-                tryPlayAudio();
-                
-                // Iniciar la secuencia de animaciones principal
-                if (!animationActive) {
-                    startClickAnimations();
-                }
-            } else {
-                // Ya tenemos música, solo crear elementos en el punto del clic
-                createClickElement(event);
-            }
-        }
-        
-        function createClickElement(event) {
-            // Obtener coordenadas del clic o toque
-            let x, y;
-            
-            if (event.type === 'touchstart') {
-                const touch = event.touches[0];
-                x = touch.clientX;
-                y = touch.clientY;
-            } else {
-                x = event.clientX;
-                y = event.clientY;
-            }
-            
-            const elementsContainer = document.getElementById('click-elements-container');
-            const element = document.createElement('div');
-            element.classList.add('click-element');
-            
-            // Elegir aleatoriamente entre pastel, corazón o globo
-            const elements = ['🎂', '❤️', '🎈', '🎉', '🎊', '🧁', '🍰'];
-            element.innerHTML = elements[Math.floor(Math.random() * elements.length)];
-            
-            // Posicionar en el punto exacto del clic
-            element.style.left = x + 'px';
-            element.style.top = y + 'px';
-            
-            elementsContainer.appendChild(element);
-            
-            // Eliminar después de que termine la animación
-            setTimeout(() => {
-                element.remove();
-            }, 1500);
-        }
-
-        // Función para iniciar la secuencia de animaciones (solo al inicio)
-        function startClickAnimations() {
-            animationActive = true;
-            
-            // 1. Mostrar el pastel grande
-            const animationCake = document.getElementById('animationCake');
-            animationCake.classList.add('active');
-            
-            // 2. Después de un tiempo, ocultar el pastel y mostrar el texto
-            setTimeout(() => {
-                animationCake.classList.remove('active');
-                
-                setTimeout(() => {
-                    const animationText = document.getElementById('animationText');
-                    animationText.classList.add('active');
-                    
-                    // 3. Después de un tiempo, ocultar el texto y mostrar la explosión de corazones
-                    setTimeout(() => {
-                        animationText.classList.remove('active');
-                        
-                        setTimeout(() => {
-                            createHeartExplosion();
-                            
-                            // Resetear para permitir nuevas animaciones
-                            setTimeout(() => {
-                                animationActive = false;
-                            }, 1500);
-                        }, 300);
-                    }, 1500);
-                }, 300);
-            }, 1500);
-        }
-
-        // Crear explosión de corazones
-        function createHeartExplosion() {
-            const heartsContainer = document.getElementById('animationHearts');
-            heartsContainer.innerHTML = '';  // Limpiar corazones previos
-            
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            
-            // Crear 30 corazones que salen desde el centro
-            for (let i = 0; i < 30; i++) {
+            // Crear corazones cayendo
+            function createHeart() {
                 const heart = document.createElement('div');
-                heart.classList.add('animation-heart');
-                heart.innerHTML = '❤️';
+                heart.className = 'heart';
+                heart.innerHTML = '♥';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
                 
-                // Posición inicial en el centro
-                heart.style.left = centerX + 'px';
-                heart.style.top = centerY + 'px';
+                const colors = ['#ff69b4', '#ff1493', '#ff6347', '#ffd700'];
+                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
                 
-                // Dirección aleatoria para la explosión
-                const angle = Math.random() * Math.PI * 2;
-                const distance = 100 + Math.random() * 200;
-                const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance;
+                document.getElementById('hearts').appendChild(heart);
                 
-                // Establecer las variables CSS para la animación
-                heart.style.setProperty('--tx', tx + 'px');
-                heart.style.setProperty('--ty', ty + 'px');
-                
-                heartsContainer.appendChild(heart);
-            }
-        }
-
-        // Crear corazones flotantes en el fondo
-        const heartsContainer = document.getElementById('hearts');
-        
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.style.left = Math.random() * 100 + '%';
-            heart.style.top = (Math.random() * 40 + 100) + '%';
-            heart.style.animationDuration = (Math.random() * 8 + 4) + 's';
-            heart.innerHTML = '❤️';
-            heartsContainer.appendChild(heart);
-            
-            // Eliminar corazón después de completar la animación
-            setTimeout(() => {
-                heart.remove();
-            }, 12000);
-        }
-        
-        // Crear pasteles flotantes en el fondo
-        const cakesContainer = document.getElementById('cakes');
-        const cakeEmojis = ['🎂', '🍰', '🧁', '🍥'];
-        
-        function createCake() {
-            const cake = document.createElement('div');
-            cake.classList.add('cake-rain');
-            cake.style.left = Math.random() * 100 + '%';
-            cake.style.top = (Math.random() * 40 + 100) + '%';
-            cake.style.animationDuration = (Math.random() * 10 + 6) + 's';
-            cake.innerHTML = cakeEmojis[Math.floor(Math.random() * cakeEmojis.length)];
-            cakesContainer.appendChild(cake);
-            
-            // Eliminar pastel después de completar la animación
-            setTimeout(() => {
-                cake.remove();
-            }, 16000);
-        }
-        
-        // Crear corazones a intervalos
-        setInterval(createHeart, 500);
-        
-        // Crear pasteles a intervalos
-        setInterval(createCake, 800);
-        
-        // Corazones iniciales
-        for(let i = 0; i < 15; i++) {
-            setTimeout(createHeart, i * 150);
-        }
-        
-        // Pasteles iniciales
-        for(let i = 0; i < 10; i++) {
-            setTimeout(createCake, i * 200);
-        }
-
-        // Crear globos
-        const balloonsContainer = document.getElementById('balloons');
-        const balloonEmojis = ['🎈', '🎈', '🎁', '🎉', '🎊'];
-        
-        function createBalloon() {
-            const balloon = document.createElement('div');
-            balloon.classList.add('balloon');
-            balloon.style.left = Math.random() * 100 + '%';
-            balloon.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            balloon.style.fontSize = (Math.random() * 20 + 30) + 'px';
-            balloon.innerHTML = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
-            balloonsContainer.appendChild(balloon);
-            
-            // Eliminar globo después de completar la animación
-            setTimeout(() => {
-                balloon.remove();
-            }, 20000);
-        }
-        
-        // Crear globos a intervalos
-        setInterval(createBalloon, 1000);
-        
-        // Globos iniciales
-        for(let i = 0; i < 15; i++) {
-            setTimeout(createBalloon, i * 300);
-        }
-
-        // Efectos de celebración desde los lados
-        document.addEventListener('DOMContentLoaded', function() {
-            startSideCelebration();
-        });
-
-        function startSideCelebration() {
-            const celebrationContainer = document.getElementById('celebrationContainer');
-            
-            // Crear los lanzadores de fiesta (party poppers)
-            const leftPopper = document.createElement('div');
-            leftPopper.classList.add('party-popper', 'party-popper-left');
-            leftPopper.innerHTML = '🎉';
-            celebrationContainer.appendChild(leftPopper);
-            
-            const rightPopper = document.createElement('div');
-            rightPopper.classList.add('party-popper', 'party-popper-right');
-            rightPopper.innerHTML = '🎊';
-            celebrationContainer.appendChild(rightPopper);
-            
-            // Crear confeti y serpentinas después de un pequeño retraso
-            setTimeout(() => {
-                createConfetti('left');
-                createConfetti('right');
-                createStreamers('left');
-                createStreamers('right');
-                
-                // Eliminar los efectos después de un tiempo
                 setTimeout(() => {
-                    // Ocultar lanzadores
-                    leftPopper.style.opacity = '0';
-                    rightPopper.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        celebrationContainer.innerHTML = '';
-                    }, 1000);
+                    heart.remove();
                 }, 5000);
-            }, 800);
-        }
-        
-        function createConfetti(side) {
-            const celebrationContainer = document.getElementById('celebrationContainer');
-            const confettiEmojis = ['🎈', '🎂', '✨', '🎁', '🎉', '🎊', '💖', '🌟', '🍰'];
-            
-            // Crear 40 piezas de confeti por lado
-            for (let i = 0; i < 40; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti-item', `confetti-${side}`);
+            }
+
+            // Reproducir música y mostrar mensaje después de un tiempo
+            setTimeout(() => {
+                setTimeout(() => {
+                    document.querySelector('.message').classList.add('show');
+                    // Iniciar corazones cayendo
+                    setInterval(createHeart, 800);
+                }, 1000);
+            }, 1500);
+
+            // Efecto de flores al hacer clic
+            document.addEventListener('click', function(e) {
+                // Ocultar el indicador de click
+                clickIndicator.style.opacity = '0';
+                setTimeout(() => {
+                    clickIndicator.style.display = 'none';
+                }, 500);
                 
-                // Usar emojis aleatorios o cuadrados de colores
-                if (Math.random() > 0.5) {
-                    confetti.innerHTML = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
-                    confetti.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                } else {
-                    const colors = ['#FF66B2', '#FFD1DC', '#FF1493', '#9400D3', '#FFC0CB', '#FF69B4'];
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                createClickFlower(e.clientX, e.clientY);
+                
+                // Crear varias flores en posición aleatoria alrededor del clic
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        const x = e.clientX + (Math.random() * 60 - 30);
+                        const y = e.clientY + (Math.random() * 60 - 30);
+                        createClickFlower(x, y);
+                    }, i * 100);
+                }
+            });
+
+            function createClickFlower(x, y) {
+                const flower = document.createElement('div');
+                flower.className = 'click-flower';
+                
+                const size = 30 + Math.random() * 30;
+                flower.style.width = `${size}px`;
+                flower.style.height = `${size}px`;
+                flower.style.left = `${x - size/2}px`;
+                flower.style.top = `${y - size/2}px`;
+                flower.style.display = 'flex';
+                flower.style.justifyContent = 'center';
+                flower.style.alignItems = 'center';
+                
+                const petals = document.createElement('div');
+                petals.className = 'petals';
+                petals.style.position = 'absolute';
+                petals.style.width = '100%';
+                petals.style.height = '100%';
+                
+                const center = document.createElement('div');
+                center.className = 'center';
+                const centerSize = size * 0.4;
+                center.style.width = `${centerSize}px`;
+                center.style.height = `${centerSize}px`;
+                center.style.position = 'absolute';
+                center.style.top = '50%';
+                center.style.left = '50%';
+                center.style.transform = 'translate(-50%, -50%)';
+                center.style.zIndex = '10';
+                
+                // Crear pétalos con centros perfectamente centrados
+                const petalSize = size * 0.35;
+                const petalLength = size * 0.6;
+                
+                for (let j = 0; j < 12; j++) {
+                    const petal = document.createElement('div');
+                    petal.className = 'petal';
+                    petal.style.width = `${petalSize}px`;
+                    petal.style.height = `${petalLength}px`;
+                    petal.style.position = 'absolute';
+                    petal.style.left = '50%';
+                    petal.style.top = '50%';
+                    petal.style.transform = `translate(-50%, -50%) rotate(${j * 30}deg) translateY(-${petalLength/3.5}px)`;
+                    petal.style.transformOrigin = 'center center';
+                    
+                    // Variación en el color de los pétalos
+                    const hueVariation = Math.random() * 20 - 10;
+                    const colors = [
+                        `hsl(${340 + hueVariation}, 90%, ${85 + Math.random() * 10}%)`, // rosa claro
+                        `hsl(${330 + hueVariation}, 90%, ${70 + Math.random() * 10}%)`, // rosa medio
+                        `hsl(${320 + hueVariation}, 80%, ${60 + Math.random() * 10}%)`  // rosa fuerte
+                    ];
+                    
+                    petal.style.background = `radial-gradient(ellipse at center, ${colors[0]} 0%, ${colors[1]} 70%, ${colors[2]} 100%)`;
+                    
+                    petals.appendChild(petal);
                 }
                 
-                // Configurar variables para controlar la animación
-                const tx = (Math.random() - 0.5) * 300;
-                const ty = (Math.random() - 0.5) * 300;
-                const rot = (Math.random() * 360) + 'deg';
+                flower.appendChild(petals);
+                flower.appendChild(center);
+                document.body.appendChild(flower);
                 
-                confetti.style.setProperty('--tx', tx + 'px');
-                confetti.style.setProperty('--ty', ty + 'px');
-                confetti.style.setProperty('--rot', rot);
-                
-                celebrationContainer.appendChild(confetti);
-                
-                // Eliminar después de la animación
+                // Eliminar la flor después de la animación
                 setTimeout(() => {
-                    confetti.remove();
-                }, 2000);
-            }
-        }
-        
-        function createStreamers(side) {
-            const celebrationContainer = document.getElementById('celebrationContainer');
-            const colors = [
-                ['#FF66B2', '#FFD1DC'], 
-                ['#FF1493', '#FFC0CB'], 
-                ['#9400D3', '#FF69B4'],
-                ['#FF1493', '#9400D3'],
-                ['#FF66B2', '#FF1493']
-            ];
-            
-            // Crear 15 serpentinas por lado
-            for (let i = 0; i < 15; i++) {
-                const streamer = document.createElement('div');
-                streamer.classList.add('streamer', `streamer-${side}`);
-                
-                // Colores aleatorios
-                const colorPair = colors[Math.floor(Math.random() * colors.length)];
-                streamer.style.setProperty('--color1', colorPair[0]);
-                streamer.style.setProperty('--color2', colorPair[1]);
-                
-                // Ángulo aleatorio
-                const angle = (Math.random() * 90 - 45) + 'deg';
-                streamer.style.setProperty('--angle', angle);
-                
-                // Longitud aleatoria
-                streamer.style.height = (Math.random() * 60 + 80) + 'px';
-                
-                celebrationContainer.appendChild(streamer);
-                
-                // Eliminar después de la animación
-                setTimeout(() => {
-                    streamer.remove();
+                    flower.remove();
                 }, 3000);
             }
-        }
-
-        // Crear globos iniciales en el contenedor especial
-        function createInitialBalloon() {
-            const container = document.getElementById('initial-balloons-container');
-            const balloon = document.createElement('div');
-            balloon.classList.add('initial-balloon');
-            balloon.style.left = Math.random() * 100 + '%';
-            balloon.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            balloon.style.fontSize = (Math.random() * 20 + 30) + 'px';
-            balloon.innerHTML = '🎈';
-            container.appendChild(balloon);
-            
-            // Eliminar globo después de completar la animación
-            setTimeout(() => {
-                balloon.remove();
-            }, 20000);
-        }
-        
-        // Crear globos iniciales a intervalos
-        setInterval(createInitialBalloon, 1000);
-        
-        // Globos iniciales
-        for(let i = 0; i < 15; i++) {
-            setTimeout(createInitialBalloon, i * 300);
-        }
-
-        // Agregar esta función al inicio del script, justo después de la declaración de variables
-        document.addEventListener('DOMContentLoaded', function() {
-            // Iniciar celebraciones laterales
-            startSideCelebration();
-            
-            // Iniciar lluvia de globos rojos
-            createInitialBalloons();
         });
 
-        // Función para crear la lluvia inicial de globos rojos
-        function createInitialBalloons() {
-            const container = document.getElementById('initial-balloons-container');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtén el elemento de audio
+            const backgroundMusic = document.getElementById('background-music');
             
-            // Crear muchos globos rojos
-            for (let i = 0; i < 100; i++) {
-                setTimeout(() => {
-                    const balloon = document.createElement('div');
-                    balloon.classList.add('initial-balloon');
-                    balloon.innerHTML = '🎈';
-                    
-                    // Posicionar aleatoriamente a lo ancho de la pantalla
-                    balloon.style.left = Math.random() * 100 + '%';
-                    
-                    // Variar tamaño ligeramente
-                    const size = 30 + Math.random() * 30;
-                    balloon.style.fontSize = size + 'px';
-                    
-                    // Variar la velocidad de caída
-                    balloon.style.animationDuration = (2 + Math.random() * 2) + 's';
-                    
-                    // Pequeña rotación aleatoria
-                    balloon.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
-                    
-                    container.appendChild(balloon);
-                }, i * 20); // Escalonar la aparición para que no aparezcan todos a la vez
-            }
-            
-            // Eliminar todos los globos después de 2 segundos
-            setTimeout(() => {
-                const balloons = container.querySelectorAll('.initial-balloon');
-                balloons.forEach(balloon => {
-                    balloon.style.opacity = '0';
-                    balloon.style.transition = 'opacity 0.5s';
-                });
+            // Variable para controlar si ya se ha reproducido una vez
+            let hasPlayed = false;
+
+            // El resto de tu código JavaScript actual permanece igual...
+
+            // Efecto de flores al hacer clic y reproducir música
+            document.addEventListener('click', function(e) {
+                // Reproducir música solo si no se ha reproducido antes
+                if (!hasPlayed) {
+                    backgroundMusic.play()
+                        .then(() => {
+                            hasPlayed = true;
+                        })
+                        .catch(error => {
+                            console.log("La reproducción automática fue prevenida:", error);
+                        });
+                }
                 
-                // Limpiar el contenedor después de la transición
-                setTimeout(() => {
-                    container.innerHTML = '';
-                }, 500);
-            }, 2000);
-        }
+                createClickFlower(e.clientX, e.clientY);
+                
+                // Crear varias flores en posición aleatoria alrededor del clic
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        const x = e.clientX + (Math.random() * 60 - 30);
+                        const y = e.clientY + (Math.random() * 60 - 30);
+                        createClickFlower(x, y);
+                    }, i * 100);
+                }
+            });
+
+            // El resto de tus funciones permanece igual...
+        });
     </script>
 </body>
 </html>
