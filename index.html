@@ -327,10 +327,9 @@
     </style>
 </head>
 <body>
-  <audio loop style="display: none" id="background-music">
-    <source src="flor.mp4" type="audio/mpeg">
-    Tu navegador no soporta el elemento de audio.
-  </audio>
+  <!-- Reemplazo: reproductor de YouTube invisible para la nueva canción -->
+  <div id="youtube-audio" style="display: none;"></div>
+    
     <div class="hearts" id="hearts"></div>
     
     <!-- Añadido: Indicador de click -->
@@ -568,42 +567,44 @@
             }
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Obtén el elemento de audio
-            const backgroundMusic = document.getElementById('background-music');
-            
-            // Variable para controlar si ya se ha reproducido una vez
-            let hasPlayed = false;
+        // Reemplazo: código para el reproductor de YouTube
+        let musicStarted = false;
+        let player;
 
-            // El resto de tu código JavaScript actual permanece igual...
-
-            // Efecto de flores al hacer clic y reproducir música
-            document.addEventListener('click', function(e) {
-                // Reproducir música solo si no se ha reproducido antes
-                if (!hasPlayed) {
-                    backgroundMusic.play()
-                        .then(() => {
-                            hasPlayed = true;
-                        })
-                        .catch(error => {
-                            console.log("La reproducción automática fue prevenida:", error);
-                        });
-                }
-                
-                createClickFlower(e.clientX, e.clientY);
-                
-                // Crear varias flores en posición aleatoria alrededor del clic
-                for (let i = 0; i < 3; i++) {
-                    setTimeout(() => {
-                        const x = e.clientX + (Math.random() * 60 - 30);
-                        const y = e.clientY + (Math.random() * 60 - 30);
-                        createClickFlower(x, y);
-                    }, i * 100);
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-audio', {
+                videoId: 'Q07UFlOlxZ0',
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'fs': 0,
+                    'modestbranding': 1,
+                    'start': 13,
+                    'playsinline': 1,
+                    'rel': 0,
+                    'iv_load_policy': 3
+                },
+                events: {
+                    'onReady': onPlayerReady
                 }
             });
+        }
 
-            // El resto de tus funciones permanece igual...
-        });
+        function onPlayerReady(event) {
+            document.addEventListener('click', function playMusicOnce() {
+                if (!musicStarted) {
+                    player.playVideo();
+                    musicStarted = true;
+                }
+            }, { once: true });
+        }
+
+        // Cargar la API de YouTube
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     </script>
 </body>
 </html>
