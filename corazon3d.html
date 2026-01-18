@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Corazón 3D Pro</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    overflow: hidden;
+    height: 100%;
+  }
+  canvas {
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+let hearts = [];
+let particles = [];
+
+let rotX = 0;
+let rotY = 0;
+let dragging = false;
+let lastX = 0;
+let lastY = 0;
+
+// Forma matemática del corazón
+function heartShape(t) {
+  return {
+    x: 16 * Math.pow(Math.sin(t), 3),
+    y: -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t))
+  };
+}
+
+// Crear corazón principal
+for (let i = 0; i < 1400; i++) {
+  const t = Math.random() * Math.PI * 2;
+  const p = heartShape(t);
+  hearts.push({
+    x: p.x * 15,
+    y: p.y * 15,
+    z: (Math.random() - 0.5) * 220,
+    size: Math.random() * 2 + 1
+  });
+}
+
+// Crear lluvia de corazones
+for (let i = 0; i < 120; i++) {
+  particles.push(createParticle());
+}
+
+function createParticle() {
+  return {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    speed: Math.random() * 1.5 + 0.5,
+    size: Math.random() * 6 + 4,
+    alpha: Math.random() * 0.6 + 0.2
+  };
+}
+
+// Proyección 3D
+function project(x, y, z) {
+  const scale = 700 / (700 + z);
+  return {
+    x: x * scale + canvas.width / 2,
+    y: y * scale + canvas.height / 2,
+    scale
+  };
+}
+
+function drawSmallHeart(x, y, size, alpha) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.shadowColor = "rgba(255,60,80,0.8)";
+  ctx.shadowBlur = 15;
+  ctx.fillStyle = "#ff2d55";
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.bezierCurveTo(x - size, y - size, x - size * 2, y + size, x, y + size * 2);
+  ctx.bezierCurveTo(x + size * 2, y + size, x + size, y - size, x, y);
+  ctx.fill();
+  ctx.restore();
+}
+
+// Animación principal
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Lluvia de corazones
+  particles.forEach(p => {
+    drawSmallHeart(p.x, p.y, p.size, p.alpha);
+    p.y += p.speed;
+    if (p.y > canvas.height + 20) {
+      Object.assign(p, createParticle(), { y: -20 });
+    }
+  });
+
+  // Corazón 3D
+  hearts.forEach(h => {
+    let x = h.x * Math.cos(rotY) - h.z * Math.sin(rotY);
+    let z = h.x * Math.sin(rotY) + h.z * Math.cos(rotY);
+
+    let y = h.y * Math.cos(rotX) - z * Math.sin(rotX);
+    z = h.y * Math.sin(rotX) + z * Math.cos(rotX);
+
+    const p = project(x, y, z);
+    drawSmallHeart(p.x, p.y, h.size * p.scale, p.scale);
+  });
+
+  requestAnimationFrame(animate);
+}
+animate();
+
+// Mouse
+canvas.addEventListener("mousedown", e => {
+  dragging = true;
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+canvas.addEventListener("mouseup", () => dragging = false);
+canvas.addEventListener("mousemove", e => {
+  if (!dragging) return;
+  rotY += (e.clientX - lastX) * 0.005;
+  rotX += (e.clientY - lastY) * 0.005;
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+
+// Soporte táctil 📱
+canvas.addEventListener("touchstart", e => {
+  dragging = true;
+  lastX = e.touches[0].clientX;
+  lastY = e.touches[0].clientY;
+});
+
+canvas.addEventListener("touchend", () => dragging = false);
+
+canvas.addEventListener("touchmove", e => {
+  if (!dragging) return;
+  const touch = e.touches[0];
+  rotY += (touch.clientX - lastX) * 0.005;
+  rotX += (touch.clientY - lastY) * 0.005;
+  lastX = touch.clientX;
+  lastY = touch.clientY;
+});
+</script>
+
+</body>
+</html>
